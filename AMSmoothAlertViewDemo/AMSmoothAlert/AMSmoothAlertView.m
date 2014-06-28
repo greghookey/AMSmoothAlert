@@ -113,6 +113,21 @@
     [self circleSetupForAlertType:type andColor:color];
 }
 
+- (CGRect)windowRectForCurrentOrientation
+{
+    CGRect portraitWindowRect = [UIScreen mainScreen].bounds;
+    
+    if ( UIInterfaceOrientationIsPortrait( [[UIApplication sharedApplication] statusBarOrientation] ) ) {
+        return portraitWindowRect;
+    }
+    
+    CGRect landscapeWindowRect = CGRectMake( portraitWindowRect.origin.x,
+                                            portraitWindowRect.origin.y,
+                                            portraitWindowRect.size.height,
+                                            portraitWindowRect.size.width );
+    
+    return landscapeWindowRect;
+}
 
 - (UIView*) alertPopupView
 {
