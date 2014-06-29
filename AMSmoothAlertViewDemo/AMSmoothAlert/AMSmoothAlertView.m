@@ -95,14 +95,14 @@
 
 - (void) _initViewWithTitle:(NSString *)title andText:(NSString *)text andCancelButton:(BOOL)hasCancelButton forAlertType:(AlertType)type andColor:(UIColor*) color
 {
-    self.frame = [self screenFrame];
+    self.frame = [self windowRectForCurrentOrientation];
     self.opaque = YES;
     self.alpha = 1;
   
     _blurFilter = [[GPUImageiOSBlurFilter alloc] init];
     _blurFilter.blurRadiusInPixels = 2.0;
   
-    bg = [[UIImageView alloc]initWithFrame:[self screenFrame]];
+    bg = [[UIImageView alloc]initWithFrame:[self windowRectForCurrentOrientation]];
   
     alertView = [self alertPopupView];
   
@@ -134,7 +134,8 @@
     UIView * alertSquare = [[UIView alloc]initWithFrame:CGRectMake(0, 0, 280, 200)];
     
     alertSquare.backgroundColor = [UIColor colorWithRed:0.937 green:0.937 blue:0.937 alpha:1];
-    alertSquare.center = CGPointMake([self screenFrame].size.width/2, -[self screenFrame].size.height/2);
+    alertSquare.center = CGPointMake([self windowRectForCurrentOrientation].size.width/2,
+                                     -[self windowRectForCurrentOrientation].size.height/2);
     
     [alertSquare.layer setShadowColor:[UIColor blackColor].CGColor];
     [alertSquare.layer setShadowOpacity:0.4];
@@ -184,7 +185,7 @@
 
 - (void) circleSetupForAlertType:(AlertType) type andColor:(UIColor*) color
 {
-    UIView * circleMask = [[UIView alloc]initWithFrame:CGRectMake([self screenFrame].size.width/2, (([self screenFrame].size.height/2)-alertView.frame.size.height/2) , 60, 60)];
+    UIView * circleMask = [[UIView alloc]initWithFrame:CGRectMake([self windowRectForCurrentOrientation].size.width/2, (([self windowRectForCurrentOrientation].size.height/2)-alertView.frame.size.height/2) , 60, 60)];
     circleView = [[AMBouncingView alloc]initSuccessCircleWithFrame:CGRectMake(0, 0, 0, 0) andImageSize:60 forAlertType:type andColor:color];
     
     _logoView = [[UIImageView alloc]initWithFrame:CGRectMake(circleMask.frame.size.width/2-30, circleMask.frame.size.height/2-30 , 0, 0)];
@@ -346,14 +347,14 @@
     //block 2
     [animationBlocks addObject:^(BOOL finished){;
         [UIView animateWithDuration:0.2 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-            alertView.center = CGPointMake([self screenFrame].size.width/2, ([self screenFrame].size.height/2)+alertView.frame.size.height*0.1);
+            alertView.center = CGPointMake([self windowRectForCurrentOrientation].size.width/2, ([self windowRectForCurrentOrientation].size.height/2)+alertView.frame.size.height*0.1);
         } completion: getNextAnimation()];
     }];
     
     //block 3
     [animationBlocks addObject:^(BOOL finished){;
         [UIView animateWithDuration:0.1 delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-            alertView.center = CGPointMake([self screenFrame].size.width/2, ([self screenFrame].size.height/2));
+            alertView.center = CGPointMake([self windowRectForCurrentOrientation].size.width/2, ([self windowRectForCurrentOrientation].size.height/2));
         } completion: getNextAnimation()];
     }];
     
@@ -372,7 +373,7 @@
 {
  
     alertView.alpha = 0;
-    alertView.center = CGPointMake([self screenFrame].size.width/2, ([self screenFrame].size.height/2));
+    alertView.center = CGPointMake([self windowRectForCurrentOrientation].size.width/2, ([self windowRectForCurrentOrientation].size.height/2));
 
     NSMutableArray* animationBlocks = [NSMutableArray new];
     
@@ -492,14 +493,6 @@
 {
     [alertView.layer setCornerRadius:cornerRadius];
 }
-
-
-- (CGRect) screenFrame
-{
-    CGRect screenRect = [[UIScreen mainScreen] bounds];
-    return screenRect;
-}
-
 
 -(UIImage *)convertViewToImage
 {
