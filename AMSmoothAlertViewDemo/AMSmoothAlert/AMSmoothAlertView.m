@@ -9,7 +9,8 @@
 
 #import "AMSmoothAlertView.h"
 
-
+#define DEGREES_TO_RADIANS(angle)       ((angle) / 180.0 * M_PI)
+#define RADIANS_TO_DEGREES(radians)     ((radians) * (180.0 / M_PI))
 
 @implementation AMSmoothAlertView
 {
@@ -176,6 +177,10 @@
     
     [bg setImage:blurredSnapshotImage];
     bg.alpha = 0.0;
+
+//        CGAffineTransform transform = CGAffineTransformIdentity;
+//        transform = CGAffineTransformRotate( transform, DEGREES_TO_RADIANS( 90.0f ) );
+//        bg.transform = transform;
     
     [self addSubview:bg];
 }
@@ -497,13 +502,18 @@
 -(UIImage *)convertViewToImage
 {
     UIWindow *keyWindow = [[UIApplication sharedApplication] keyWindow];
-    CGRect rect = [keyWindow bounds];
+    CGRect rect = [self windowRectForCurrentOrientation];
     UIGraphicsBeginImageContextWithOptions(rect.size,YES,0.0f);
     CGContextRef context = UIGraphicsGetCurrentContext();
     [keyWindow.layer renderInContext:context];
     UIImage *capturedScreen = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
-    return capturedScreen;
+    
+    if ( UIInterfaceOrientationIsPortrait( [[UIApplication sharedApplication] statusBarOrientation] ) ) {
+        return capturedScreen;
+    }
+    
+    return capturedScreen; //[[UIImage alloc] initWithCGImage:[capturedScreen CGImage] scale:1.0f orientation:UIImageOrientationLeft];
 }
 
 - (CGRect) newFrameForView:(UIView*) uiview withWidth:(float) width andHeight:(float) height

@@ -31,6 +31,27 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
+{
+    [super willAnimateRotationToInterfaceOrientation:toInterfaceOrientation duration:duration];
+}
+
+- (CGRect)windowRectForCurrentOrientation
+{
+    CGRect portraitWindowRect = [UIScreen mainScreen].bounds;
+    
+    if ( UIInterfaceOrientationIsPortrait( [[UIApplication sharedApplication] statusBarOrientation] ) ) {
+        return portraitWindowRect;
+    }
+    
+    CGRect landscapeWindowRect = CGRectMake( portraitWindowRect.origin.x,
+                                            portraitWindowRect.origin.y,
+                                            portraitWindowRect.size.height,
+                                            portraitWindowRect.size.width );
+    
+    return landscapeWindowRect;
+}
+
 - (IBAction)openPopup:(id)sender {
 
     if (!alert || !alert.isDisplayed) {
